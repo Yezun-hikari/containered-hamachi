@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  hamachi:
+    # This image must be built manually on the host first.
+    # After building, you can deploy this stack in Portainer.
+    # The 'build' context is provided in a separate file (docker-compose.build.yml)
+    # for the initial, one-time build process.
+    image: hamachi-arm:custom
+    container_name: hamachi
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      # Persists Hamachi identity and network configuration
+      - hamachi-config:/var/lib/logmein-hamachi
+    restart: unless-stopped
+
+volumes:
+  hamachi-config:
+    name: hamachi-config
