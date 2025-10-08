@@ -7,7 +7,7 @@ This repository contains everything needed to build and run a LogMeIn Hamachi cl
 - **Fully Automated Build:** The `Dockerfile` handles downloading the correct Hamachi version, extracting, and installing it. No manual file transfers are needed.
 - **Portainer Stack Ready:** A `docker-compose.yml` file is provided for easy deployment as a stack in Portainer.
 - **Persistent Configuration:** A Docker volume is used to store your Hamachi identity and network configurations, so they survive container restarts and updates.
-- **Designed for ARM:** Uses `debian:bullseye-slim` as the base image, which is lightweight and compatible with Raspberry Pi and similar ARM devices.
+- **Designed for ARM:** Uses `debian:bookworm-slim` as the base image, which is lightweight and compatible with Raspberry Pi 5 and other modern ARM devices.
 
 ## How to Use
 
@@ -28,26 +28,29 @@ Because Portainer cannot build an image from a `Dockerfile` during a stack deplo
 
 2. **Clone this repository:**
 
+   If you have cloned this repository, navigate into its directory. If you downloaded the files, make sure all files (`Dockerfile`, `docker-compose.yml`, `start.sh`) are in your current directory.
+
    ```bash
-   git clone <url_of_this_repository>
-   cd <repository_name>
+   # Example:
+   # git clone https://github.com/your-username/your-repo.git
+   # cd your-repo
    ```
 
 3. **Build the Docker image:**
 
-   This command uses the `Dockerfile` in the repository to create a local Docker image named `hamachi-arm:custom`. The Dockerfile is based on `debian:bullseye-slim` and will automatically download and install the ARM-compatible Hamachi binary.
+   This command uses the `Dockerfile` in the repository to create a local Docker image named `hamachi-arm:custom`. The Dockerfile is based on `debian:bookworm-slim` and will automatically download and install the ARM-compatible Hamachi binary.
 
    ```bash
    docker build -t hamachi-arm:custom .
    ```
 
 The build process will:
-- Start from the `debian:bullseye-slim` base image
+- Start from the `debian:bookworm-slim` base image
 - Install necessary dependencies
 - Download the Hamachi ARM binary
 - Set up all required components automatically
 
-That's it! The image is now stored locally on your Pi, ready for Portainer. You don't need the cloned repository files anymore, but it's good to keep them for future rebuilds.
+That's it! The image is now stored locally on your Pi, ready for Portainer.
 
 ### Step 2: Deploy the Stack in Portainer
 
@@ -61,6 +64,8 @@ That's it! The image is now stored locally on your Pi, ready for Portainer. You 
 
    services:
      hamachi:
+       # This image must be built manually on the host first before deploying the stack.
+       # See the README.md for instructions.
        image: hamachi-arm:custom
        container_name: hamachi
        cap_add:
@@ -68,6 +73,7 @@ That's it! The image is now stored locally on your Pi, ready for Portainer. You 
        devices:
          - /dev/net/tun:/dev/net/tun
        volumes:
+         # Persists Hamachi identity and network configuration
          - hamachi-data:/var/lib/logmein-hamachi
        restart: unless-stopped
 
@@ -115,9 +121,9 @@ Your configuration is persisted in the `hamachi-data` volume, so it will survive
 
 ## Technical Details
 
-- **Base Image:** `debian:bullseye-slim` - A minimal Debian 11 image that provides good compatibility with ARM architectures while keeping the container size small.
-- **Architecture:** Designed for ARM devices (armv7/armv8), tested on Raspberry Pi.
-- **Hamachi Version:** The Dockerfile downloads version 2.1.0.203 for ARM architecture.
+- **Base Image:** `debian:bookworm-slim` - A minimal Debian 12 image, suitable for the Raspberry Pi 5 and other modern ARM devices.
+- **Architecture:** Designed for `armhf` (ARM Hard Float), which is compatible with `arm64` devices like the Raspberry Pi 5.
+- **Hamachi Version:** The Dockerfile downloads version `2.1.0.203-armhf`, the latest available beta for ARM devices.
 
 ## Repository Structure
 

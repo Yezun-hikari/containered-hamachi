@@ -1,5 +1,5 @@
 # Base image for ARM64v8 architecture
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # Install dependencies needed for download and installation
 RUN apt-get update && \
@@ -7,9 +7,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
-ENV HAMACHI_URL=https://vpn.net/installers/logmein-hamachi-2.1.0.203-armel.tgz
+ENV HAMACHI_URL=https://www.vpn.net/installers/logmein-hamachi-2.1.0.203-armhf.tgz
 ENV HAMACHI_TGZ=logmein-hamachi.tgz
-ENV HAMACHI_DIR=logmein-hamachi-2.1.0.203-armel
+ENV HAMACHI_DIR=logmein-hamachi-2.1.0.203-armhf
 ENV HAMACHI_DST=/opt/logmein-hamachi
 
 # Download, extract, and install Hamachi
@@ -34,3 +34,6 @@ RUN wget -q -O "$HAMACHI_TGZ" "$HAMACHI_URL" && \
 # In a real-world git repo, this file would be present.
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
+
+# Set the entrypoint to the start script
+CMD ["/start.sh"]
