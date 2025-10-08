@@ -1,5 +1,5 @@
-# Base image for ARMv7 architecture
-FROM balenalib/armv7hf-debian:latest
+# Base image for ARM64v8 architecture
+FROM balenalib/arm64v8-debian:latest
 
 # Install dependencies needed for download and installation
 RUN apt-get update && \
