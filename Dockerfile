@@ -1,5 +1,5 @@
 # Base image for ARM64v8 architecture
-FROM balenalib/arm64v8-debian:latest
+FROM debian:bullseye-slim
 
 # Install dependencies needed for download and installation
 RUN apt-get update && \
@@ -34,6 +34,3 @@ RUN wget -q -O "$HAMACHI_TGZ" "$HAMACHI_URL" && \
 # In a real-world git repo, this file would be present.
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
-
-# Set the entrypoint
-ENTRYPOINT ["/start.sh"]
